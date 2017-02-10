@@ -1,0 +1,44 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "export NODE_ENV=local && nodemon --ignore ./build/ --exec 'serverless offline'",
+    "lint": "eslint .",
+    "test": "export NODE_ENV=test && serverless dynamodb executeAll -f -s test && jest",
+    "coverage": "export NODE_ENV=test && serverless dynamodb executeAll -f -s test && jest --coverage",
+    "build:prod": "export NODE_ENV=production && mkdir -p ./build && cp -f ./bin/buildsrc/* ./build/ && cd ./build && make",
+    "build": "export NODE_ENV=development && mkdir -p ./build && cp -f ./bin/buildsrc/* ./build/ && cd ./build && make",
+    "deploy": "export NODE_ENV=development && cd ./build && make install"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/build/",
+      "/node_modules/"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.)(test|spec))\\.jsx?$"
+  },
+  "devDependencies": {
+    "babel-cli": " ^6.22.2",
+    "babel-jest": "^18.0.0",
+    "babel-preset-es2015": " ^6.22.0",
+    "babel-preset-stage-2": " ^6.22.0",
+    "concurrently": "^3.1.0",
+    "eslint": "^3.14.1",
+    "jest": "^18.1.0",
+    "nodemon": "^1.11.0",
+    "serverless-dynamodb-local": "git+https://github.com/kyunghoon/serverless-dynamodb-local.git",
+    "serverless-offline": "^3.8.3"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.9.0",
+    "babel-polyfill": "^6.22.0",
+    "bcryptjs": "^2.4.0",
+    "graphql": "^0.9.1",
+    "graphql-list-fields": "^1.1.0",
+    "jsonwebtoken": "^7.2.1",
+    "lodash": "^4.17.4",
+    "ts-loader": "^2.0.0",
+    "twitter": "^1.7.0",
+    "typescript": "^2.1.6",
+    "uuid-js": "^0.7.5"
+  }
+}

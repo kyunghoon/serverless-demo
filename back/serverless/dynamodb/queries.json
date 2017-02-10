@@ -1,0 +1,17 @@
+{
+	"Table": {
+		"TableName": "Queries",
+		"KeySchema": [
+			{ "AttributeName": "userId", "KeyType": "HASH" },
+			{ "AttributeName": "timestamp", "KeyType": "RANGE" }
+		],
+		"AttributeDefinitions": [
+			{ "AttributeName": "userId", "AttributeType": "S" },
+			{ "AttributeName": "timestamp", "AttributeType": "S" }
+		],
+		"ProvisionedThroughput": { "ReadCapacityUnits": 1, "WriteCapacityUnits": 1 }
+	},
+	"Seeds": [
+		{ "userId": "0", "timestamp": "0", "value": "((cat dog poop) OR (birds feet))" }
+	]
+}

@@ -1,0 +1,132 @@
+exports[`graphql login should find a user 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "email": "login@test.com",
+      "id": "id-5",
+      "name": null,
+      "permissions": Array [
+        "UPDATE_USER",
+        "DELETE_USER",
+      ],
+      "screenName": "login",
+      "token": null,
+    },
+  },
+}
+`;
+
+exports[`graphql login should login with a correct password 1`] = `
+Object {
+  "data": Object {
+    "login": Object {
+      "email": "login@test.com",
+      "id": "id-5",
+      "name": null,
+      "permissions": Array [
+        "UPDATE_USER",
+        "DELETE_USER",
+      ],
+      "screenName": "login",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imd1ZXN0QGd1ZXN0cy5jb20iLCJoYXNoIjoiJDJhJDEwJGJ1dTFOYmdoWUI0MEJjWGgzeXFyWmVER2d5eGQ1VmY1dS9Cd3V5SlZGZFl0U1RneTdxZEtLIiwiaWQiOiIxIiwiaWF0IjoxNDg1OTk4MjA2fQ.zp8jknsjvj_qxv3UvIaOhOS_d1wOqpI-IzqrRJCqMxM",
+    },
+  },
+}
+`;
+
+exports[`graphql login should not login with a bad password 1`] = `
+Object {
+  "data": Object {
+    "login": null,
+  },
+  "errors": Array [
+    [GraphQLError: invalid password],
+  ],
+}
+`;
+
+exports[`graphql should create a user 1`] = `
+Object {
+  "data": Object {
+    "createUser": Object {
+      "email": "create@test.com",
+      "id": "id-1",
+      "name": null,
+      "permissions": Array [
+        "UPDATE_USER",
+        "DELETE_USER",
+      ],
+      "screenName": "create",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imd1ZXN0QGd1ZXN0cy5jb20iLCJoYXNoIjoiJDJhJDEwJGJ1dTFOYmdoWUI0MEJjWGgzeXFyWmVER2d5eGQ1VmY1dS9Cd3V5SlZGZFl0U1RneTdxZEtLIiwiaWQiOiIxIiwiaWF0IjoxNDg1OTk4MjA2fQ.zp8jknsjvj_qxv3UvIaOhOS_d1wOqpI-IzqrRJCqMxM",
+    },
+  },
+}
+`;
+
+exports[`graphql should fail to create a user with an existing email 1`] = `
+Object {
+  "data": Object {
+    "createUser": null,
+  },
+  "errors": Array [
+    [GraphQLError: email already in use],
+  ],
+}
+`;
+
+exports[`graphql should fail to update a non-existing user 1`] = `
+Object {
+  "data": Object {
+    "updateUser": null,
+  },
+  "errors": Array [
+    [GraphQLError: The conditional request failed],
+  ],
+}
+`;
+
+exports[`graphql should get the viewer 1`] = `
+Object {
+  "data": Object {
+    "viewer": Object {
+      "email": "guest@guests.com",
+      "id": "1",
+      "name": "guest",
+      "permissions": Array [
+        "UPDATE_USER",
+        "DELETE_USER",
+      ],
+      "screenName": "guest",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imd1ZXN0QGd1ZXN0cy5jb20iLCJoYXNoIjoiJDJhJDEwJGJ1dTFOYmdoWUI0MEJjWGgzeXFyWmVER2d5eGQ1VmY1dS9Cd3V5SlZGZFl0U1RneTdxZEtLIiwiaWQiOiIxIiwiaWF0IjoxNDg1OTk4MjA2fQ.zp8jknsjvj_qxv3UvIaOhOS_d1wOqpI-IzqrRJCqMxM",
+    },
+  },
+}
+`;
+
+exports[`graphql should remove a user 1`] = `
+Object {
+  "data": Object {
+    "removeUser": Object {
+      "id": "id-4",
+    },
+  },
+}
+`;
+
+exports[`graphql should update a user 1`] = `
+Object {
+  "data": Object {
+    "updateUser": Object {
+      "email": "update@test.com",
+      "id": "id-0",
+      "name": "updated name",
+      "permissions": Array [
+        "UPDATE_USER",
+        "DELETE_USER",
+      ],
+      "screenName": "updated screenname",
+      "token": null,
+    },
+  },
+}
+`;

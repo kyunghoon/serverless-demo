@@ -1,0 +1,392 @@
+#!/usr/bin/env node
+'use strict'
+
+// EXAMPLES
+// db.Users.update({"Id":"1", "$set": {"SomeKey": "SomeValue"}});
+// db.Users.insert({"Id":"88", "MyKey": 1});
+// db.Users.findOne({"Id":"88"});
+// db.Users.find().limit(20);
+// TODO
+// db.insert({"TableName": "Users", "Id":"88", "SomeKey": "SomeValue"});
+// db.insertBatch({'Users': [{'Id':'1'}, {'Id':'2'}], 'Friends': []});
+// db.findBatch({'Users': [{'Id':'1'}, {'Id':'2'}], 'Friends': []});
+
+if (!process.env.NODE_ENV) throw new Error('NODE_ENV not set');
+
+let config = null;
+
+
+process.on('uncaughtException', e => { console.error('Uncaught Exception', e, e.stack); });
+process.chdir(__dirname);
+
+const _ = require('lodash');
+const co = require('co');
+const readline = require('readline');
+const AWS = require('aws-sdk');
+
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+
+if (process.env.NODE_ENV == 'local') {
+  config = {
+    accessKeyId: 'omit', // can't be blank for dev env
+    secretAccessKey: 'omit', // can't be blank for dev env
+    region: 'us-east-1',
+    endpoint: new AWS.Endpoint('http://0.0.0.0:8000'),
+    //endpoint: new AWS.Endpoint('http://localhost:8000')
+  };
+} else {
+  if (!process.env.AWS_ACCESS_KEY_ID) throw new Error('AWS_ACCESS_KEY_ID not set');
+  if (!process.env.AWS_SECRET_ACCESS_KEY) throw new Error('AWS_SECRET_ACCESS_KEY not set');
+
+  config = {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: 'ap-northeast-1',
+    endpoint: new AWS.Endpoint('https://dynamodb.ap-northeast-1.amazonaws.com')
+  };
+}
+
+AWS.config.update(config);
+//AWS.config.update({ region: 'us-west-2'});
+AWS.config.apiVersions = { dynamodb: '2012-08-10' };
+
+var dynamodb = new AWS.DynamoDB();
+const docClient = new AWS.DynamoDB.DocumentClient();
+
+const VERBOSE = process.argv.indexOf('-v') != -1;
+const DEBUG = process.argv.indexOf('-d') != -1;
+const MAX_FIND_LIMIT = 50;
+
+const parseCond = (propName, cond) => {
+  if (!_.isObject(cond)) throw new Error('bad argument');
+  if (_.isBoolean(cond['$isnull'])) return docClient.Condition(propName, cond['$isnull'] ? 'NULL' : 'NOT_NULL');
+  else if (_.isArray(cond['$between'])) return docClient.Condition(propName, 'BETWEEN', cond['$between']);
+  else if (_.isString(cond['$contains'])) return docClient.Condition(propName, 'CONTAINS', cond['$contains']);
+  else if (_.isString(cond['$not_contains'])) return docClient.Condition(propName, 'NOT_CONTAINS', cond['$not_contains']);
+  else if (_.isString(cond['$begins_with'])) return docClient.Condition(propName, 'BEGINS_WITH', cond['$begins_with']);
+  else if (!_.isNil(cond['$eq'])) return docClient.Condition(propName, 'EQ', cond['$eq']);
+  else if (!_.isNil(cond['$ne'])) return docClient.Condition(propName, 'NE', cond['$ne']);
+  else if (!_.isNil(cond['$in'])) return docClient.Condition(propName, 'IN', cond['$in']);
+  else if (!_.isNil(cond['$le'])) return docClient.Condition(propName, 'LE', cond['$le']);
+  else if (!_.isNil(cond['$lte'])) return docClient.Condition(propName, 'LE', cond['$lte']);
+  else if (!_.isNil(cond['$lt'])) return docClient.Condition(propName, 'LT', cond['$lt']);
+  else if (!_.isNil(cond['$ge'])) return docClient.Condition(propName, 'GE', cond['$ge']);
+  else if (!_.isNil(cond['$gte'])) return docClient.Condition(propName, 'GE', cond['$gte']);
+  else if (!_.isNil(cond['$gt'])) return docClient.Condition(propName, 'GT', cond['$gt']);
+  else throw new Error('unrecognized condition');
+};
+
+const createTable = (tableName) => ({
+  find: (query) => {
+    if (!query) throw new Error('bad argument');
+    return new Promise((resolve, reject) => {
+      var params = {
+        TableName : tableName
+      };
+      if (query.Limit) {
+        params.Limit = query.Limit;
+        delete query.Limit;
+      }
+      if (query.ExclusiveStartKey) {
+        params.ExclusiveStartKey = query.ExclusiveStartKey;
+        delete query.ExclusiveStartKey;
+      }
+      let filterExprs = [];
+      let attrVals = {};
+      _.forIn(query, (v, k) => {
+        const attr = `:${filterExprs.length}`;
+        filterExprs.push(`${k}=${attr}`);
+        attrVals[attr] = v;
+      });
+      if (filterExprs.length > 0) {
+        params.FilterExpression = filterExprs.join(', ');
+        params.ExpressionAttributeValues = attrVals;
+      }
+      if (VERBOSE) {
+        console.log('SCAN', JSON.stringify(params));
+      }
+      docClient.scan(params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  },
+  findOne: (query) => {
+    if (!query) throw new Error('bad argument');
+    return new Promise((resolve, reject) => {
+      const params = {
+        TableName: tableName,
+        Key: query
+      };
+      if (VERBOSE) {
+        console.log('GET', JSON.stringify(params));
+      }
+      docClient.get(params, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  },
+  insert: (item) => {
+    if (!item) throw new Error('bad argument');
+    return new Promise((resolve, reject) => {
+      var params = {
+        TableName: tableName,
+        Item: item
+      };
+      if (VERBOSE) {
+        console.log('PUT', JSON.stringify(params));
+      }
+      docClient.put(params, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  },
+  update: (update) => {
+    if (!update) throw new Error('bad arguments');
+    if (!update['$set']) throw new Error('bad arguments');
+    const mods = Object.assign({}, update['$set']);
+    delete update['$set'];
+    return new Promise((resolve, reject) => {
+      var params = {
+        TableName: tableName,
+        Key: update,
+        ReturnValues: 'UPDATED_NEW'
+      };
+      let updateExprs = [];
+      let attrVals = {};
+      if (mods) {
+        _.forIn(mods, (v, k) => {
+          const attr = `:${updateExprs.length}`;
+          updateExprs.push(`${k}=${attr}`);
+          attrVals[attr] = v;
+        });
+      }
+      if (updateExprs.length <= 0) throw new Error('nothing to update');
+      params.UpdateExpression = `set ${updateExprs.join(', ')}`;
+      params.ExpressionAttributeValues = attrVals;
+      if (VERBOSE) {
+        console.log('UPDATE', JSON.stringify(params));
+      }
+      docClient.update(params, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  },
+  remove: (query) => {
+    if (!query) throw new Error('bad arguments');
+    return new Promise((resolve, reject) => {
+      const params = {
+        TableName: tableName,
+        Key: query,
+        ReturnValues: 'ALL_OLD'
+      };
+      if (VERBOSE) {
+        console.log('DELETE', JSON.stringify(params));
+      }
+      docClient.delete(params, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  },
+  drop: () => {
+    return new Promise((resolve, reject) => {
+      var params = {
+        TableName: tableName,
+      };
+      dynamodb.deleteTable(params, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+});
+
+const repl = () => {
+  const doFind = co.wrap(function*(col, query, limit) {
+    query.Limit = !limit || limit > MAX_FIND_LIMIT ? MAX_FIND_LIMIT : limit;
+    const result = yield col.find(query);
+    _.forEach(result.Items, i => console.log(JSON.stringify(i)));
+    if (result.LastEvaluatedKey) {
+      moreRepl(result, co.wrap(function*(prevResult) {
+        return yield col.find(Object.assign({}, query, {ExclusiveStartKey: prevResult.LastEvaluatedKey}));
+      }));
+    } else {
+      repl();
+    }
+  });
+  const doFindOne = co.wrap(function*(col, query) {
+    const result = yield col.findOne(query);
+    console.log(result.Item);
+    repl();
+  });
+  const doInsert = co.wrap(function*(col, item) {
+    const result = yield col.insert(item);
+    console.log(result);
+    repl();
+  });
+  const doRemove = co.wrap(function*(col, query) {
+    const result = yield col.remove(query);
+    console.log(result.Attributes);
+    repl();
+  });
+  const doUpdate = co.wrap(function*(col, item) {
+    const result = yield col.update(item);
+    console.log(result);
+    repl();
+  });
+  const doDrop = co.wrap(function*(col) {
+    const result = yield col.drop();
+    console.log(result);
+    repl();
+  });
+  const showTables = () => {
+    return new Promise((resolve, reject) => {
+      const params = {};
+      dynamodb.listTables(params, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    })
+  };
+  const describeTable = (tableName) => {
+    return new Promise((resolve, reject) => {
+      var params = {
+        TableName: tableName
+      };
+      dynamodb.describeTable(params, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  };
+  const tableExists = co.wrap(function*(tableName) {
+    const tables = yield showTables();
+    return tables.TableNames.indexOf(tableName) != -1;
+  });
+  const parseCommand = (commandNames, command) => {
+    if (!command) throw new Error('bad command');
+    const index = command.indexOf('.');
+    if (index < 1) throw new Error('bad command');
+    const tableName = command.substr(0, index).trim();
+    const rest = command.substr(index + 1).trim();
+    const lindex = rest.lastIndexOf(');');
+    if (lindex === -1) throw new Error('bad command - did you forget a semicolon?');
+    const ret = {
+      tableName,
+      params: _
+      .map(commandNames, s => s + '(')
+      .map(str => { const idx = rest.indexOf(str); return {startIndex: idx, name: str.substr(0, str.length-1)}; })
+      .filter(x => x.startIndex >= 0)
+      .sort((a, b) => a.startIndex - b.startIndex)
+      .reduce((a, e) => { e.endIndex = lindex; if (a.length > 0) a[a.length - 1].endIndex = e.startIndex - 1; a.push(e); return a; }, [])
+      .map(e => Object.assign({}, e, {endIndex: rest.lastIndexOf(')', e.endIndex)}))
+      .map(e => ({name: e.name, jsonStr: rest.substr(e.startIndex + e.name.length + 1, e.endIndex - (e.startIndex + e.name.length) - 1)}))
+      .reduce((a, e) => { a[e.name] = e.jsonStr ? JSON.parse(e.jsonStr) : {}; return a; }, {})
+    };
+    if (_.keys(ret.params).filter(k => k != 'limit').length > 1) throw new Error('bad command');
+    return ret;
+  };
+  const moreRepl = (result, moreFn) => {
+    console.log('`m` to see more');
+    rl.question('dynamodb:> ', co.wrap(function*(input) {
+      try {
+        if (input !== 'm') {
+          yield handleInput(input);
+        } else {
+          const nextResult = yield moreFn(result);
+          _.forEach(nextResult.Items, i => console.log(JSON.stringify(i)));
+          if (!nextResult.LastEvaluatedKey) {
+            repl();
+          } else {
+            moreRepl(nextResult, moreFn);
+          }
+        }
+      } catch (e) {
+        console.log(DEBUG ? e : e.message);
+        repl();
+      }
+    }));
+  };
+  const handleInput = co.wrap(function*(input) {
+    try {
+      if (!input) {
+        repl();
+      } else {
+        const split = input.split('db.');
+        const command = split.length == 1 ? split[0] : split.length == 2 && !split[0] ? split[1] : '';
+        const tokens = command.split(' ').filter(t => !!t);
+        if (tokens.length === 2 && tokens[0] === 'show' && (tokens[1] == 'tables' || tokens[1] == 'tables;' || tokens[1] == 'collections' || tokens[1] == 'collections;')) {
+          const tables = yield showTables();
+          _.forEach(tables.TableNames, n => console.log(n));
+          repl();
+        } else if (tokens.length === 2 && tokens[0] === 'describe') {
+          const tableName = tokens[1].split(';').join('');
+          const result = yield describeTable(tableName);
+          console.log(JSON.stringify(result, null, 2));
+          repl();
+        } else {
+          const commandNames = ['find', 'findOne', 'remove', 'insert', 'update', 'limit', 'drop'];
+          const parsed = parseCommand(commandNames, command);
+          const tableName = parsed.tableName;
+          const params = parsed.params;
+          if (!(yield tableExists(tableName))) {
+            console.log('bad table');
+            repl();
+          } else {
+            const col = createTable(tableName);
+            if (params.find) {
+              yield doFind(col, params.find, params.limit);
+            } else if (params.findOne) {
+              yield doFindOne(col, params.findOne);
+            } else if (params.remove) {
+              yield doRemove(col, params.remove);
+            } else if (params.insert) {
+              yield doInsert(col, params.insert);
+            } else if (params.update) {
+              yield doUpdate(col, params.update);
+            } else if (params.drop && _.isEmpty(params.drop)) {
+              yield doDrop(col);
+            } else {
+              console.log('come again?');
+              repl();
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.log(DEBUG ? e : e.message);
+      repl();
+    }
+  });
+  rl.question('dynamodb:> ', handleInput);
+};
+
+repl();

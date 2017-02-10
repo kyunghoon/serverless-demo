@@ -1,0 +1,451 @@
+exports[`querybuilder term should trigger the onClick event 1`] = `
+<div
+  className="Dropdown"
+  style={
+    Object {
+      "boxSizing": "border-box",
+      "position": "relative",
+    }
+  }>
+  <div
+    className="Flex"
+    style={
+      Object {
+        "boxSizing": "border-box",
+        "display": "flex",
+      }
+    }>
+    <div
+      className="Flex"
+      style={
+        Object {
+          "boxSizing": "border-box",
+          "display": "flex",
+        }
+      }>
+      <div
+        className="Flex"
+        style={
+          Object {
+            "boxSizing": "border-box",
+            "display": "flex",
+          }
+        }>
+        <input
+          autoFocus={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyUp={[Function]}
+          placeholder="Term"
+          style={
+            Object {
+              "marginBottom": "8px",
+              "textAlign": "center",
+            }
+          }
+          type="text"
+          value="" />
+      </div>
+    </div>
+    <div
+      className="Flex"
+      onClick={[Function]}
+      style={
+        Object {
+          "WebkitAlignItems": "center",
+          "WebkitFlexDirection": "column",
+          "WebkitJustifyContent": "center",
+          "alignItems": "center",
+          "boxSizing": "border-box",
+          "cursor": "pointer",
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "marginBottom": 8,
+          "msAlignItems": "center",
+          "msFlexDirection": "column",
+          "msJustifyContent": "center",
+          "position": "static",
+        }
+      }>
+      <button
+        className="Close"
+        onClick={[Function]}
+        style={
+          Object {
+            "WebkitAppearance": "none",
+            "backgroundColor": "transparent",
+            "border": 0,
+            "boxSizing": "border-box",
+            "color": "inherit",
+            "cursor": "pointer",
+            "fontSize": "1.5em",
+            "fontWeight": "bold",
+            "height": "26px",
+            "left": "2px",
+            "lineHeight": 1,
+            "margin": 0,
+            "marginLeft": "4px",
+            "padding": 0,
+            "position": "relative",
+            "top": "-12px",
+            "visibility": "visible",
+          }
+        }
+        title="Close">
+        ×
+      </button>
+      <div
+        className="Arrow"
+        style={
+          Object {
+            "borderBottom": null,
+            "borderLeft": ".3125em solid transparent",
+            "borderRight": ".3125em solid transparent",
+            "borderTop": ".4375em solid",
+            "boxSizing": "border-box",
+            "display": "inline-block",
+            "height": 0,
+            "margin": "12px 5px 12px 4px",
+            "marginLeft": ".5em",
+            "position": "absolute",
+            "verticalAlign": "middle",
+            "width": 0,
+          }
+        } />
+    </div>
+  </div>
+  <div
+    className="DropdownMenu"
+    style={
+      Object {
+        "borderWidth": "0",
+        "bottom": "auto",
+        "boxSizing": "border-box",
+        "display": "none",
+        "left": 0,
+        "marginBottom": 8,
+        "position": "inherit",
+        "right": "auto",
+        "top": "initial",
+        "zIndex": 4,
+      }
+    }>
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "bottom": 0,
+          "display": "none",
+          "left": 0,
+          "position": "fixed",
+          "right": 0,
+          "top": 0,
+        }
+      } />
+    <div
+      style={
+        Object {
+          "position": "relative",
+          "zIndex": 2,
+        }
+      }>
+      <div
+        className="Menu"
+        style={
+          Object {
+            "backgroundColor": "#fff",
+            "borderColor": "rgba(0, 0, 0, .25)",
+            "borderRadius": 2,
+            "borderStyle": "solid",
+            "borderWidth": "0",
+            "boxSizing": "border-box",
+            "color": "#111",
+            "display": "flex",
+            "flexDirection": "column",
+            "marginBottom": 8,
+            "minWidth": 128,
+            "overflow": "hidden",
+            "position": "inherit",
+            "top": "initial",
+          }
+        }>
+        <a
+          className="NavItem"
+          onClick={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "boxSizing": "border-box",
+              "color": "inherit",
+              "cursor": "pointer",
+              "display": "flex",
+              "fontSize": 14,
+              "fontWeight": 600,
+              "lineHeight": "1rem",
+              "paddingBottom": 8,
+              "paddingLeft": 8,
+              "paddingRight": 8,
+              "paddingTop": 8,
+              "textDecoration": "none",
+            }
+          }>
+          +Not
+        </a>
+        <a
+          className="NavItem"
+          onClick={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "boxSizing": "border-box",
+              "color": "inherit",
+              "cursor": "pointer",
+              "display": "flex",
+              "fontSize": 14,
+              "fontWeight": 600,
+              "lineHeight": "1rem",
+              "paddingBottom": 8,
+              "paddingLeft": 8,
+              "paddingRight": 8,
+              "paddingTop": 8,
+              "textDecoration": "none",
+            }
+          }>
+          +Mention
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`querybuilder term should trigger the onClick event 2`] = `
+<div
+  className="Dropdown"
+  style={
+    Object {
+      "boxSizing": "border-box",
+      "position": "relative",
+    }
+  }>
+  <div
+    className="Flex"
+    style={
+      Object {
+        "boxSizing": "border-box",
+        "display": "flex",
+      }
+    }>
+    <div
+      className="Flex"
+      style={
+        Object {
+          "boxSizing": "border-box",
+          "display": "flex",
+        }
+      }>
+      <div
+        className="Flex"
+        style={
+          Object {
+            "boxSizing": "border-box",
+            "display": "flex",
+          }
+        }>
+        <input
+          autoFocus={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyUp={[Function]}
+          placeholder="Term"
+          style={
+            Object {
+              "marginBottom": "8px",
+              "textAlign": "center",
+            }
+          }
+          type="text"
+          value="" />
+      </div>
+    </div>
+    <div
+      className="Flex"
+      onClick={[Function]}
+      style={
+        Object {
+          "WebkitAlignItems": "center",
+          "WebkitFlexDirection": "column",
+          "WebkitJustifyContent": "center",
+          "alignItems": "center",
+          "boxSizing": "border-box",
+          "cursor": "pointer",
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "marginBottom": 8,
+          "msAlignItems": "center",
+          "msFlexDirection": "column",
+          "msJustifyContent": "center",
+          "position": "static",
+        }
+      }>
+      <button
+        className="Close"
+        onClick={[Function]}
+        style={
+          Object {
+            "WebkitAppearance": "none",
+            "backgroundColor": "transparent",
+            "border": 0,
+            "boxSizing": "border-box",
+            "color": "inherit",
+            "cursor": "pointer",
+            "fontSize": "1.5em",
+            "fontWeight": "bold",
+            "height": "26px",
+            "left": "2px",
+            "lineHeight": 1,
+            "margin": 0,
+            "marginLeft": "4px",
+            "padding": 0,
+            "position": "relative",
+            "top": "-12px",
+            "visibility": "visible",
+          }
+        }
+        title="Close">
+        ×
+      </button>
+      <div
+        className="Arrow"
+        style={
+          Object {
+            "borderBottom": null,
+            "borderLeft": ".3125em solid transparent",
+            "borderRight": ".3125em solid transparent",
+            "borderTop": ".4375em solid",
+            "boxSizing": "border-box",
+            "display": "inline-block",
+            "height": 0,
+            "margin": "12px 5px 12px 4px",
+            "marginLeft": ".5em",
+            "position": "absolute",
+            "verticalAlign": "middle",
+            "width": 0,
+          }
+        } />
+    </div>
+  </div>
+  <div
+    className="DropdownMenu"
+    style={
+      Object {
+        "borderWidth": "0",
+        "bottom": "auto",
+        "boxSizing": "border-box",
+        "display": "none",
+        "left": 0,
+        "marginBottom": 8,
+        "position": "inherit",
+        "right": "auto",
+        "top": "initial",
+        "zIndex": 4,
+      }
+    }>
+    <div
+      onClick={[Function]}
+      style={
+        Object {
+          "bottom": 0,
+          "display": "none",
+          "left": 0,
+          "position": "fixed",
+          "right": 0,
+          "top": 0,
+        }
+      } />
+    <div
+      style={
+        Object {
+          "position": "relative",
+          "zIndex": 2,
+        }
+      }>
+      <div
+        className="Menu"
+        style={
+          Object {
+            "backgroundColor": "#fff",
+            "borderColor": "rgba(0, 0, 0, .25)",
+            "borderRadius": 2,
+            "borderStyle": "solid",
+            "borderWidth": "0",
+            "boxSizing": "border-box",
+            "color": "#111",
+            "display": "flex",
+            "flexDirection": "column",
+            "marginBottom": 8,
+            "minWidth": 128,
+            "overflow": "hidden",
+            "position": "inherit",
+            "top": "initial",
+          }
+        }>
+        <a
+          className="NavItem"
+          onClick={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "boxSizing": "border-box",
+              "color": "inherit",
+              "cursor": "pointer",
+              "display": "flex",
+              "fontSize": 14,
+              "fontWeight": 600,
+              "lineHeight": "1rem",
+              "paddingBottom": 8,
+              "paddingLeft": 8,
+              "paddingRight": 8,
+              "paddingTop": 8,
+              "textDecoration": "none",
+            }
+          }>
+          +Not
+        </a>
+        <a
+          className="NavItem"
+          onClick={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "boxSizing": "border-box",
+              "color": "inherit",
+              "cursor": "pointer",
+              "display": "flex",
+              "fontSize": 14,
+              "fontWeight": 600,
+              "lineHeight": "1rem",
+              "paddingBottom": 8,
+              "paddingLeft": 8,
+              "paddingRight": 8,
+              "paddingTop": 8,
+              "textDecoration": "none",
+            }
+          }>
+          +Mention
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;

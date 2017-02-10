@@ -1,0 +1,25 @@
+{
+	"Table": {
+		"TableName": "Users",
+		"KeySchema": [
+			{ "AttributeName": "id", "KeyType": "HASH" }
+		],
+		"AttributeDefinitions": [
+			{ "AttributeName": "id", "AttributeType": "S" },
+			{ "AttributeName": "email", "AttributeType": "S" }
+		],
+		"GlobalSecondaryIndexes": [{
+			"IndexName": "emailIndex", "KeySchema": [
+				{ "AttributeName": "email", "KeyType": "HASH" }
+			],
+			"Projection": {
+				"ProjectionType": "ALL"
+			},
+			"ProvisionedThroughput": { "ReadCapacityUnits": 1, "WriteCapacityUnits": 1 }
+		}],
+		"ProvisionedThroughput": { "ReadCapacityUnits": 1, "WriteCapacityUnits": 1 }
+	},
+	"Seeds": [
+		{ "id": "1", "email": "guest@guests.com", "name": "guest", "screenName": "guest", "description": "guest user", "hash": "$2a$10$buu1NbghYB40BcXh3yqrZeDGgyxd5Vf5u/BwuyJVFdYtSTgy7qdKK", "permissions": ["UPDATE_USER", "DELETE_USER"] }
+	]
+}

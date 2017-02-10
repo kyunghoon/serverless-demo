@@ -1,0 +1,12 @@
+back/v1/api/.serverless
+back/v1/api/config.js
+back/v1/api/node_modules
+back/v1/api/src
+coverage/
+node_modules/
+api/npm-debug.log
+npm-debug.log
+build/
+yarn-error.log
+back/v1/src/schema.graphql
+back/v1/src/schema.json
