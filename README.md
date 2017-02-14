@@ -4,6 +4,8 @@ An example project used to test out various web technologies.
 
 [View demo](http://kyunghoon-demo-client.s3-website-ap-northeast-1.amazonaws.com/#/)
 
+[Typescript version](https://github.com/kyunghoon/serverless-demo-typescript)
+
 ## Features
 
 ### Backend
@@ -74,7 +76,7 @@ This project is structured such that multiple frontend and backend apps can co-e
 
         npm install yarn
 
-**Step 4:** Install packages 
+**Step 6:** Install packages 
 
         # relative to <repo-root>
         yarn install
@@ -85,22 +87,22 @@ This project is structured such that multiple frontend and backend apps can co-e
         # relative to <repo-root>/back/twitterdemo
         yarn install
 
-**Step 5:** Start local dynamodb
+**Step 7:** Start local dynamodb
 
         # relative to <repo-root>/back/serverless
         docker-compose up -d
 
-***Step 6:*** Start local backend app
+***Step 8:*** Start local backend app
 
         # relative to <repo-root>/back/serverless
         npm start                   # Runs in foreground, bg it if necessary
 
-***Step 7:*** Start local frontend app
+***Step 9:*** Start local frontend app
 
         # relative to <repo-root>/front/twitterdemo
         npm start                   # Runs in a foreground, bg it if necessary
 
-**Step 8:** Open browser to `http://localhost:8080/`
+**Step 10:** Open browser to `http://localhost:8080/`
 
 ## Backend serverless app details
 
@@ -128,7 +130,7 @@ make sure the settings in `./serverless.yml` and `./bin/buildsrc/serverless.yml`
         npm run build
         # outputs to the ./build directory
 
-        npm run build
+        npm run deploy
 
 ## Frontend twitterdemo app details
 
