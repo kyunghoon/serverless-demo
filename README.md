@@ -2,8 +2,6 @@
 
 An example project used to test out various web technologies.
 
-[View demo](http://kyunghoon-demo-client.s3-website-ap-northeast-1.amazonaws.com/#/)
-
 [Typescript version](https://github.com/kyunghoon/serverless-demo-typescript)
 
 ## Features
